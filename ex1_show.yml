@@ -1,0 +1,14 @@
+---
+- name: nxos - show ip bgp summary
+  gather_facts: off
+  hosts: nxos1:nxos2
+  tasks:
+    - name: pull show
+      nxos_command:
+        commands: show ip bgp summary
+      register: out
+
+    - name: show
+      debug:
+        var: out
+

@@ -1,0 +1,19 @@
+---
+- name: ex5b alt
+  gather_facts: off
+  hosts: arista
+  tasks:
+
+    - name: pull show command
+      eos_command:
+        commands: show version
+      register: output
+
+    - name: command output
+      set_fact:
+        show_ver: "{{ output['stdout'][0] }}"
+
+    - name: find soft ver
+      debug:
+        msg: "{{ show_ver | regex_search('Software image version: (\\S+)', '\\1') }}"
+

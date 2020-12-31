@@ -1,0 +1,28 @@
+---
+- name: nxos - show ip bgp summary - TextFSM
+  gather_facts: off
+  hosts: nxos1:nxos2
+  vars:
+    fsm_template: "cisco_ios_show_ip_bgp_summary.textfsm"
+  tasks:
+    - name: pull show
+      nxos_command:
+        commands: show ip bgp summary
+      register: out
+
+    - name: set show
+      set_fact:
+        show_out: "{{ out.stdout[0] | parse_cli_textfsm(fsm_template) }}"
+
+    - name: show show
+      debug:
+        var: show_out
+
+    - name: test
+      assert:
+        that:
+          - show_out[0]['STATE_PFXRCD'] not in 'Shut'
+          - show_out[0]['STATE_PFXRCD'] not in 'Idle'
+          - show_out[0]['STATE_PFXRCD'] in '2'
+
+

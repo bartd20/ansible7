@@ -1,0 +1,16 @@
+---
+- name: json test
+  gather_facts: off
+  hosts: arista5
+  tasks:
+    - name: show ver
+      eos_command:
+        commands: show version | json
+      register: out
+
+    - set_fact:
+        show_ver: "{{ out['stdout'][0] }}"
+
+    - debug:
+        msg: "Uptime: {{ show_ver.uptime }}"
+

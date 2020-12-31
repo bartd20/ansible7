@@ -1,0 +1,22 @@
+---
+- name: ex4b
+  gather_facts: off
+  hosts: nxos
+  vars:
+    command: show version
+  collections:
+    - clay584.genie
+  tasks:
+    - name: pull cmd output
+      nxos_command:
+        commands: "{{ command }}"
+      register: out
+
+    - name: parse output with genie
+      set_fact:
+        genie_out: "{{ out.stdout[0] | clay584.genie.parse_genie(command=command, os='nxos') }}"
+
+    - name: display genie output
+      debug:
+        var: genie_out.platform.software.system_version
+

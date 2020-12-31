@@ -1,0 +1,22 @@
+---
+- name: ex3b
+  gather_facts: off
+  hosts: nxos1:nxos2
+  vars:
+    platform: "arista_eos"
+    command: "show vlan"
+    textfsm_index: "/home/dankowski/ntc-templates/templates/"
+  tasks:
+    - name: pull show
+      nxos_command:
+        commands: "{{ command }}"
+      register: out
+
+    - name: set show
+      set_fact:
+        show_out: "{{ out.stdout[0] | ntc_parse(command, platform,  textfsm_index) }}"
+
+    - name: show show
+      debug:
+        var: show_out
+

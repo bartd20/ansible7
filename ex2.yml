@@ -1,0 +1,21 @@
+---
+- name: block/rescue config
+  gather_facts: off
+  hosts: arista5
+  tasks:
+    - block:
+        - name: block - invalid password
+          vars:
+            ansible_ssh_pass: "invalid"
+          eos_config:
+            lines:
+              - ip name-server 3.3.3.3
+      rescue:
+        - name: rescue - correct password
+          vars:
+          # Use environment variable to avoid hard-coded passwd
+            ansible_ssh_pass: "{{lookup('env','ANSIBLE_PASSWORD')}}"
+          eos_config:
+            lines:
+              - ip name-server 4.4.4.4
+

@@ -1,0 +1,15 @@
+---
+- name: nxos bgp - create template - push config
+  gather_facts: off
+  hosts: nxos1:nxos2
+  tasks:
+    - name: create template
+      template:
+        src: ex1.j2
+        dest: "{{ inventory_hostname }}.txt"
+
+    - name: push config
+      nxos_config:
+        src: "{{ inventory_hostname}}.txt"
+
+        
